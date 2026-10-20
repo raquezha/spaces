@@ -1,59 +1,42 @@
 # AGENTS.md
 
-Welcome to **Spaces** (`raquezha/spaces`), an open-source developer-centric productivity shell built with Kotlin Multiplatform (KMP).
+Welcome to **Spaces** (`raquezha/spaces`).
+
+> **"A clean mobile app that looks at your week's work and writes your report for you."**
+
+Inside the app, you have your spaces: a workspace for team repos, a devspace for personal hacks and open-source, or whatever context you work in.
 
 ---
 
-## 🚨 CRITICAL OPEN-SOURCE & ZERO-PII RULES
+## 🚨 OPEN-SOURCE & ZERO-PII RULES
 
-This repository is public and open-source. All agents executing tasks in this codebase must strictly adhere to the following safety rules:
+This is a public open-source repository.
 
-1. **ZERO COMPANY PII OR PRIVATE DOMAINS:**
-   - NEVER commit company names, intranet domains, private GitLab hosts, internal wiki/Outline URLs, or employee names into code, comments, sample data, or fixtures.
-   - All sample and mock data MUST use fictional neutral placeholders (e.g., `Dev Jane`, `sample-repo`, `feature/awesome-tool`).
-2. **HOST-AGNOSTIC ABSTRACTIONS:**
-   - NEVER hardcode private host URLs in connectors.
-   - All connectors must accept runtime `hostUrl` parameters with public defaults (`https://gitlab.com`, `https://api.github.com`).
-   - Self-hosted instances are configured dynamically by the user at runtime in Settings.
-3. **SECRET ISOLATION:**
-   - NEVER commit API tokens, OAuth client IDs, client secrets, or Apple Developer signing materials (`*.p12`, `*.p8`, `*.cer`, `*.mobileprovision`, `Secrets.xcconfig`).
-   - Credentials must be persisted on-device only via native platform vaults (macOS/iOS Keychain and Android EncryptedSharedPreferences).
-
----
-
-## ARCHITECTURAL PRINCIPLES
-
-1. **Pure Client-Side Architecture (No Custom Backend):**
-   - Spaces does NOT have a custom backend API server or cloud database.
-   - The mobile client queries existing third-party REST APIs (GitLab, GitHub, Outline) directly via Ktor.
-2. **Native Idiomatic UIs:**
-   - **Android:** Jetpack Compose (`androidApp`).
-   - **iOS:** Native SwiftUI (`iosApp`) consuming the shared KMP framework.
-   - Do not use Compose Multiplatform for iOS.
-3. **Preview-First Development:**
-   - All UI components must support instant previewing via `@Preview` (Compose) and `#Preview` (SwiftUI) using mock data (`MockActivityConnector`) without requiring network connectivity.
-4. **Hero Feature Focus (V1):**
-   - The primary feature is the **Weekly Developer Report Engine**:
-     - Connects to GitLab (OAuth 2.0 PKCE / PAT) and GitHub (PAT).
-     - Pulls authenticated activity for the date window (last 7 days).
-     - Normalizes items into `DevActivity`.
-     - Categorizes activity into **Major** (merged features), **Minor** (chores, bumps), and **Other** (reviews).
-     - Captures **Blockers** and **Personal Notes**.
-     - Provides a 1-tap **Copy as Markdown** button formatted for team meetings.
+1. **NO COMPANY PII OR PRIVATE DOMAINS:**
+   - NEVER commit company names, intranet URLs, private domains, or employee names into code, comments, sample data, or fixtures.
+   - All preview mocks and unit test fixtures MUST use fictional names (e.g. `Dev Jane`, `sample-project`).
+2. **HOST-AGNOSTIC:**
+   - Connectors take a configurable `hostUrl` (defaulting to public `gitlab.com` or `api.github.com`).
+   - Self-hosted instances are configured by the user at runtime in Settings.
+3. **ZERO LEAKS:**
+   - Never commit tokens, client secrets, or Apple signing certificates (`*.mobileprovision`, `*.p12`, `Secrets.xcconfig`).
+   - Credentials stay on-device in native Keychain (iOS) and EncryptedSharedPreferences (Android).
 
 ---
 
-## CORE CONTRACTS (`shared/commonMain`)
+## THE CORE STACK
 
-- `ActivityConnector`: Host-agnostic interface for activity sources.
-- `DevActivity`: Normalized cross-platform activity item.
-- `WeeklyReport`: Aggregate report model with markdown serialization.
-- `DestinationPublisher`: Pluggable output target (e.g. `ClipboardPublisher`, `OutlinePublisher`).
+- **Shared Core (KMP):** Pure Kotlin in `shared/commonMain` (Ktor, Coroutines, DateTime, serialization). Zero custom backend servers.
+- **Android UI:** Jetpack Compose with Material 3.
+- **iOS UI:** Native SwiftUI consuming the shared KMP framework.
+- **Preview-First:** Every screen must render instantly in `@Preview` and `#Preview` using mock data.
 
 ---
 
-## PROJECT TRACKING
+## WHAT SPACES DOES (V1)
 
-Tasks are tracked on the GitHub Project board:
-- **Board:** [Spaces V1](https://github.com/users/raquezha/projects/4)
-- **Issues:** #1 to #9 in `raquezha/spaces`
+1. Connects to your code host (GitLab / GitHub).
+2. Grabs your last 7 days of merged PRs/MRs, commits, and reviews.
+3. Groups them into **Major**, **Minor**, and **Other**.
+4. Gives you quick text fields for **Blockers** and **Notes**.
+5. 1-tap **"Copy as Markdown"** so your Thursday morning report is finished in 30 seconds.
