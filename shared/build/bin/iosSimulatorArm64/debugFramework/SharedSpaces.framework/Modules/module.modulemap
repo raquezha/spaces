@@ -1,0 +1,8 @@
+framework module "SharedSpaces" {
+    umbrella header "SharedSpaces.h"
+
+    export *
+    module * { export * }
+
+    use Foundation
+}

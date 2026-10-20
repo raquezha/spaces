@@ -1,0 +1,32 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+*.apk
+*.aab
+*.ipa
+
+# OS
+Thumbs.db
+
+# Xcode & Apple Credentials (STRICT ZERO-LEAK)
+*.mobileprovision
+*.p12
+*.p8
+*.cer
+*.key
+Secrets.xcconfig
+xcuserdata/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcuserdatad
+
+# Android keystores
+*.jks
+*.keystore
